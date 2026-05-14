@@ -1,78 +1,81 @@
-#ifndef TPQUEUE_H
-#define TPQUEUE_H
+// Copyright 2024 <Student Name>
+
+#ifndef INCLUDE_TPQUEUE_H_
+#define INCLUDE_TPQUEUE_H_
 
 struct SYM {
-    char ch;
-    int prior;
+  char ch;
+  int prior;
 };
 
 template<typename T>
 class TPQueue {
-private:
-    struct Node {
-        T data;
-        Node* next;
-        Node(const T& value) : data(value), next(nullptr) {}
-    };
+ private:
+  struct Node {
+    T data;
+    Node* next;
+    explicit Node(const T& value) : data(value), next(nullptr) {}
+  };
 
-    Node* head;
-    Node* tail;
+  Node* head;
+  Node* tail;
 
-public:
-    TPQueue() : head(nullptr), tail(nullptr) {}
+ public:
+  TPQueue() : head(nullptr), tail(nullptr) {}
 
-    ~TPQueue() {
-        while (!isEmpty()) {
-            pop();
-        }
+  ~TPQueue() {
+    while (!isEmpty()) {
+      pop();
     }
+  }
 
-    void push(const T& item) {
-        Node* newNode = new Node(item);
-        if (isEmpty()) {
-            head = tail = newNode;
-            return;
-        }
-        if (item.prior > head->data.prior) {
-            newNode->next = head;
-            head = newNode;
-            return;
-        }
-        Node* current = head;
-        while (current->next != nullptr && item.prior <= current->next->data.prior) {
-            current = current->next;
-        }
-        newNode->next = current->next;
-        current->next = newNode;
-        if (newNode->next == nullptr) {
-            tail = newNode;
-        }
+  void push(const T& item) {
+    Node* newNode = new Node(item);
+    if (isEmpty()) {
+      head = tail = newNode;
+      return;
     }
+    if (item.prior > head->data.prior) {
+      newNode->next = head;
+      head = newNode;
+      return;
+    }
+    Node* current = head;
+    while (current->next != nullptr &&
+           item.prior <= current->next->data.prior) {
+      current = current->next;
+    }
+    newNode->next = current->next;
+    current->next = newNode;
+    if (newNode->next == nullptr) {
+      tail = newNode;
+    }
+  }
 
-    T pop() {
-        if (isEmpty()) {
-            throw "Queue is empty!";
-        }
-        Node* temp = head;
-        T result = head->data;
-        head = head->next;
-        if (head == nullptr) {
-            tail = nullptr;
-        }
-        delete temp;
-        return result;
+  T pop() {
+    if (isEmpty()) {
+      throw "Queue is empty!";
     }
+    Node* temp = head;
+    T result = head->data;
+    head = head->next;
+    if (head == nullptr) {
+      tail = nullptr;
+    }
+    delete temp;
+    return result;
+  }
 
-    bool isEmpty() const {
-        return head == nullptr;
-    }
+  bool isEmpty() const {
+    return head == nullptr;
+  }
 
-    T front() const {
-        if (isEmpty()) {
-            throw "Queue is empty!";
-        }
-        return head->data;
+  T front() const {
+    if (isEmpty()) {
+      throw "Queue is empty!";
     }
+    return head->data;
+  }
 };
 
-#endif
+#endif  // INCLUDE_TPQUEUE_H_
